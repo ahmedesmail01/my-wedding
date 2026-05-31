@@ -1,26 +1,365 @@
 @import "tailwindcss";
 
+/* ----------------------------------------------------
+   CORE DESIGN SYSTEM VARIABLES
+---------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --primary-color: #2A363B;
+  --secondary-color: #99B898;
+  --accent-color: #D4AF37;       /* Classic Metallic Gold */
+  --accent-glow: rgba(212, 175, 55, 0.4);
+  --bg-color: #F8F7F4;           /* Luxury Soft Off-white / Alabaster */
+  --card-bg: rgba(255, 255, 255, 0.75);
+  --text-primary: #2C2C2C;       /* Rich Charcoal */
+  --text-muted: #666666;
+  
+  --font-serif: var(--font-cinzel), 'Cinzel', 'Playfair Display', serif;
+  --font-arabic: var(--font-amiri), 'Amiri', 'Cairo', serif;
+  
+  --transition-smooth: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-quick: all 0.3s ease;
+  
+  --shadow-premium: 0 20px 40px rgba(0, 0, 0, 0.04), 
+                     0 1px 3px rgba(0, 0, 0, 0.02);
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.04);
+  
+  --border-glass: 1px solid rgba(255, 255, 255, 0.5);
+  --border-gold: 1px solid rgba(212, 175, 55, 0.3);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ----------------------------------------------------
+   RESET & FOUNDATIONS
+---------------------------------------------------- */
+*, *::before, *::after {
+  box-shadow: none;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  background-color: #1a1a1a; /* Background dark shade behind the mobile mockup on desktop */
+  color: var(--text-primary);
+  overflow-x: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+/* Elegant gold/bronze selection style */
+::selection {
+  background: var(--accent-glow);
+  color: var(--primary-color);
+}
+
+/* Custom premium thin scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 2px;
+}
+
+/* ----------------------------------------------------
+   SAAS RESPONSIVE MOBILE CONTAINER
+   Mockups a beautiful phone viewport on desktop, full screen on mobile.
+---------------------------------------------------- */
+.mobile-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 450px; /* iPhone Pro Max width standard */
+  height: 100%;
+  min-height: 100dvh;
+  margin: 0 auto;
+  background-color: var(--bg-color);
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 480px) {
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: radial-gradient(circle at center, #2c2c2c 0%, #111111 100%);
+    padding: 20px 0;
+  }
+  .mobile-wrapper {
+    height: 92dvh;
+    min-height: 800px;
+    border-radius: 40px;
+    border: 12px solid #222; /* Sleek bezel */
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+  }
+}
+
+/* ----------------------------------------------------
+   ANIMATION CONTROLS & KEYFRAMES
+---------------------------------------------------- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes floatSoft {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(2deg);
+  }
+}
+
+@keyframes pulseGold {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 4px rgba(212, 175, 55, 0.7);
+  }
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Equalizer bar keyframes */
+@keyframes eqRise {
+  0%, 100% {
+    transform: scaleY(0.2);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+/* Butterfly wing beat keyframe */
+@keyframes butterflyBeat {
+  0%, 100% {
+    transform: scaleX(1);
+  }
+  50% {
+    transform: scaleX(0.3);
+  }
+}
+
+/* ----------------------------------------------------
+   UTILITIES & DECORATIONS
+---------------------------------------------------- */
+.animate-fade-in-up {
+  animation: fadeInUp 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 1.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+.animate-float {
+  animation: floatSoft 6s ease-in-out infinite;
+}
+
+.animate-pulse-gold {
+  animation: pulseGold 2.5s infinite;
+}
+
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: var(--border-glass);
+  box-shadow: var(--shadow-glass);
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 25%, #B38728 50%, #FBF5B7 75%, #AA771C 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 200% auto;
+  animation: shimmer 8s linear infinite;
+}
+
+.gold-border-decor {
+  position: relative;
+}
+.gold-border-decor::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent-color), transparent);
+}
+
+/* ----------------------------------------------------
+   SLIDE / SCROLL SNAP CONTROLS
+---------------------------------------------------- */
+.slides-scroller {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  height: 100%;
+  scrollbar-width: none; /* Hide scrollbar for clean layout */
+}
+.slides-scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.slide-card {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  position: relative;
+  overflow: hidden;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Luxury card framing matching Instagram screenshots */
+.slide-inner-frame {
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 24px;
+  padding: 32px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.4);
+  box-shadow: inset 0 0 40px rgba(255, 255, 255, 0.5);
+}
+
+/* Decorative vintage corners for card framing */
+.slide-inner-frame::before {
+  content: '';
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  border: 1px solid rgba(212, 175, 55, 0.08);
+  pointer-events: none;
+  border-radius: 16px;
+}
+
+/* ----------------------------------------------------
+   EQUALIZER ANIMATION FOR MUSIC BUTTON
+---------------------------------------------------- */
+.eq-container {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: 14px;
+  height: 14px;
+}
+.eq-bar {
+  width: 2px;
+  height: 100%;
+  background-color: var(--accent-color);
+  transform-origin: bottom;
+  animation: eqRise 1s ease-in-out infinite;
+}
+.eq-bar:nth-child(2) { animation-delay: 0.2s; }
+.eq-bar:nth-child(3) { animation-delay: 0.4s; }
+.eq-bar:nth-child(4) { animation-delay: 0.1s; }
+
+.audio-paused .eq-bar {
+  animation-play-state: paused;
+  transform: scaleY(0.2);
+}
+
+/* ----------------------------------------------------
+   ARABIC CALLIGRAPHY CUSTOM STYLES
+---------------------------------------------------- */
+.rtl-content {
+  direction: rtl;
+  text-align: center;
+  font-family: var(--font-arabic);
+}
+.ltr-content {
+  direction: ltr;
+  text-align: center;
+  font-family: var(--font-serif);
+}
+
+/* Custom premium form inputs matching aesthetics */
+.form-input {
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 12px;
+  font-family: var(--font-arabic);
+  font-size: 14px;
+  color: var(--text-primary);
+  outline: none;
+  transition: var(--transition-quick);
+}
+.form-input:focus {
+  background: #ffffff;
+  border-color: var(--accent-color);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.15);
+}
+
+.form-label {
+  display: block;
+  font-family: var(--font-arabic);
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: var(--primary-color);
+  text-align: right;
 }
