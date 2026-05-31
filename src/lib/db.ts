@@ -1,11 +1,5 @@
-import { sql } from '@vercel/postgres';
+import { createPool } from '@vercel/postgres';
 import { weddingConfig } from '@/config/wedding';
-
-// Synchronize custom Vercel environment variables to standard POSTGRES_URL driver expectations
-const customPgUrl = process.env.sanaya_POSTGRES_URL || process.env.samaya_POSTGRES_URL;
-if (!process.env.POSTGRES_URL && customPgUrl) {
-  process.env.POSTGRES_URL = customPgUrl;
-}
 
 export interface DbGreeting {
   id: number;
@@ -15,7 +9,7 @@ export interface DbGreeting {
   created_at: string;
 }
 
-// In-memory mock database fallback for local dev when POSTGRES_URL is not set
+// In-memory mock database fallback for local dev when Postgres is not set
 let mockGreetings: DbGreeting[] = weddingConfig.guestbook.initialGreetings.map((g, idx) => ({
   id: idx + 1,
   name: g.name,
@@ -24,9 +18,27 @@ let mockGreetings: DbGreeting[] = weddingConfig.guestbook.initialGreetings.map((
   created_at: new Date(g.date).toISOString()
 }));
 
-// Helper to determine if we have a live Vercel Postgres connection
+// Helper to determine if we have a live Vercel Postgres connection string
 const isDbConnected = (): boolean => {
-  return typeof process.env.POSTGRES_URL === 'string' && process.env.POSTGRES_URL.length > 0;
+  const connectionString = 
+    process.env.POSTGRES_URL || 
+    process.env.sanaya_POSTGRES_URL || 
+    process.env.samaya_POSTGRES_URL;
+  return typeof connectionString === 'string' && connectionString.length > 0;
+};
+
+// Lazy pool helper to prevent ESM import hoisting timezone/connection string lag
+let pool: any = null;
+
+const getSql = () => {
+  if (!pool) {
+    const connectionString = 
+      process.env.POSTGRES_URL || 
+      process.env.sanaya_POSTGRES_URL || 
+      process.env.samaya_POSTGRES_URL;
+    pool = createPool({ connectionString });
+  }
+  return pool.sql;
 };
 
 // Initialize table if using live Postgres
@@ -34,6 +46,7 @@ export async function initDatabase() {
   if (!isDbConnected()) return;
 
   try {
+    const sql = getSql();
     await sql`
       CREATE TABLE IF NOT EXISTS greetings (
         id SERIAL PRIMARY KEY,
@@ -54,6 +67,7 @@ export async function getApprovedGreetings(): Promise<DbGreeting[]> {
   if (isDbConnected()) {
     try {
       await initDatabase(); // Ensure table exists
+      const sql = getSql();
       const { rows } = await sql<DbGreeting>`
         SELECT id, name, message, approved, created_at 
         FROM greetings 
@@ -78,6 +92,7 @@ export async function getAllGreetings(): Promise<DbGreeting[]> {
   if (isDbConnected()) {
     try {
       await initDatabase();
+      const sql = getSql();
       const { rows } = await sql<DbGreeting>`
         SELECT id, name, message, approved, created_at 
         FROM greetings 
@@ -102,6 +117,7 @@ export async function addGreeting(name: string, message: string): Promise<DbGree
   if (isDbConnected()) {
     try {
       await initDatabase();
+      const sql = getSql();
       const { rows } = await sql<DbGreeting>`
         INSERT INTO greetings (name, message, approved)
         VALUES (${trimmedName}, ${trimmedMessage}, false)
@@ -129,6 +145,7 @@ export async function addGreeting(name: string, message: string): Promise<DbGree
 export async function approveGreeting(id: number): Promise<boolean> {
   if (isDbConnected()) {
     try {
+      const sql = getSql();
       await sql`
         UPDATE greetings 
         SET approved = true 
@@ -154,6 +171,7 @@ export async function approveGreeting(id: number): Promise<boolean> {
 export async function deleteGreeting(id: number): Promise<boolean> {
   if (isDbConnected()) {
     try {
+      const sql = getSql();
       await sql`
         DELETE FROM greetings 
         WHERE id = ${id};
