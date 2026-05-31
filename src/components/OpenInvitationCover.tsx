@@ -99,7 +99,7 @@ export default function OpenInvitationCover({ onOpen }: OpenInvitationCoverProps
           className="text-xs text-gray-400 font-light tracking-wide rtl-content"
           style={{ fontFamily: "var(--font-cairo)" }}
         >
-          انقر لفتح بطاقة الدعوة الموسيقية
+          انقر لفتح بطاقة الدعوة
         </p>
 
         <button
