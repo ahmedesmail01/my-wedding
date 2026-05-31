@@ -1,4 +1,4 @@
-import { createPool } from '@vercel/postgres';
+import { createPool, createClient } from '@vercel/postgres';
 import { weddingConfig } from '@/config/wedding';
 
 export interface DbGreeting {
@@ -30,15 +30,38 @@ const isDbConnected = (): boolean => {
 // Lazy pool helper to prevent ESM import hoisting timezone/connection string lag
 let pool: any = null;
 
-const getSql = () => {
-  if (!pool) {
-    const connectionString = 
-      process.env.POSTGRES_URL || 
-      process.env.sanaya_POSTGRES_URL || 
-      process.env.samaya_POSTGRES_URL;
-    pool = createPool({ connectionString });
+// Executing queries using pooled connection or direct connection depending on connection string type
+const executeQuery = async <T = any>(
+  queryFn: (sql: any) => Promise<T>
+): Promise<T> => {
+  const connectionString = 
+    process.env.POSTGRES_URL || 
+    process.env.sanaya_POSTGRES_URL || 
+    process.env.samaya_POSTGRES_URL;
+
+  if (!connectionString) {
+    throw new Error("No database connection string configured.");
   }
-  return pool.sql;
+
+  // Neon direct connections throw if used with createPool in @vercel/postgres.
+  // We automatically detect if the connection is pooled (contains '-pooler') or direct.
+  const isPooled = connectionString.includes('-pooler');
+
+  if (isPooled) {
+    if (!pool) {
+      pool = createPool({ connectionString });
+    }
+    return await queryFn(pool.sql);
+  } else {
+    // Create an ephemeral client for direct connections to prevent connection pool exhaustion in serverless environments
+    const client = createClient({ connectionString });
+    await client.connect();
+    try {
+      return await queryFn(client.sql);
+    } finally {
+      await client.end();
+    }
+  }
 };
 
 // Initialize table if using live Postgres
@@ -46,16 +69,17 @@ export async function initDatabase() {
   if (!isDbConnected()) return;
 
   try {
-    const sql = getSql();
-    await sql`
-      CREATE TABLE IF NOT EXISTS greetings (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        message TEXT NOT NULL,
-        approved BOOLEAN DEFAULT FALSE,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
-      );
-    `;
+    await executeQuery((sql) => {
+      return sql`
+        CREATE TABLE IF NOT EXISTS greetings (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(255) NOT NULL,
+          message TEXT NOT NULL,
+          approved BOOLEAN DEFAULT FALSE,
+          created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+        );
+      `;
+    });
     console.log("Postgres database table initialized successfully.");
   } catch (error) {
     console.error("Failed to initialize database table:", error);
@@ -68,15 +92,16 @@ export async function getApprovedGreetings(): Promise<DbGreeting[]> {
   if (isDbConnected()) {
     try {
       await initDatabase(); // Ensure table exists
-      const sql = getSql();
-      const { rows } = await sql<DbGreeting>`
-        SELECT id, name, message, approved, created_at 
-        FROM greetings 
-        WHERE approved = true 
-        ORDER BY created_at DESC 
-        LIMIT 50;
-      `;
-      return rows;
+      const { rows } = await executeQuery((sql) => {
+        return sql`
+          SELECT id, name, message, approved, created_at 
+          FROM greetings 
+          WHERE approved = true 
+          ORDER BY created_at DESC 
+          LIMIT 50;
+        `;
+      });
+      return rows as DbGreeting[];
     } catch (error) {
       console.error("Postgres error in getApprovedGreetings:", error);
       throw error;
@@ -94,13 +119,14 @@ export async function getAllGreetings(): Promise<DbGreeting[]> {
   if (isDbConnected()) {
     try {
       await initDatabase();
-      const sql = getSql();
-      const { rows } = await sql<DbGreeting>`
-        SELECT id, name, message, approved, created_at 
-        FROM greetings 
-        ORDER BY created_at DESC;
-      `;
-      return rows;
+      const { rows } = await executeQuery((sql) => {
+        return sql`
+          SELECT id, name, message, approved, created_at 
+          FROM greetings 
+          ORDER BY created_at DESC;
+        `;
+      });
+      return rows as DbGreeting[];
     } catch (error) {
       console.error("Postgres error in getAllGreetings:", error);
       throw error;
@@ -120,13 +146,14 @@ export async function addGreeting(name: string, message: string): Promise<DbGree
   if (isDbConnected()) {
     try {
       await initDatabase();
-      const sql = getSql();
-      const { rows } = await sql<DbGreeting>`
-        INSERT INTO greetings (name, message, approved)
-        VALUES (${trimmedName}, ${trimmedMessage}, false)
-        RETURNING id, name, message, approved, created_at;
-      `;
-      return rows[0];
+      const { rows } = await executeQuery((sql) => {
+        return sql`
+          INSERT INTO greetings (name, message, approved)
+          VALUES (${trimmedName}, ${trimmedMessage}, false)
+          RETURNING id, name, message, approved, created_at;
+        `;
+      });
+      return rows[0] as DbGreeting;
     } catch (error) {
       console.error("Postgres error in addGreeting:", error);
       throw error;
@@ -149,12 +176,13 @@ export async function addGreeting(name: string, message: string): Promise<DbGree
 export async function approveGreeting(id: number): Promise<boolean> {
   if (isDbConnected()) {
     try {
-      const sql = getSql();
-      const result = await sql`
-        UPDATE greetings 
-        SET approved = true 
-        WHERE id = ${id};
-      `;
+      const result = await executeQuery((sql) => {
+        return sql`
+          UPDATE greetings 
+          SET approved = true 
+          WHERE id = ${id};
+        `;
+      });
       return (result.rowCount ?? 0) > 0;
     } catch (error) {
       console.error("Postgres error in approveGreeting:", error);
@@ -175,11 +203,12 @@ export async function approveGreeting(id: number): Promise<boolean> {
 export async function deleteGreeting(id: number): Promise<boolean> {
   if (isDbConnected()) {
     try {
-      const sql = getSql();
-      const result = await sql`
-        DELETE FROM greetings 
-        WHERE id = ${id};
-      `;
+      const result = await executeQuery((sql) => {
+        return sql`
+          DELETE FROM greetings 
+          WHERE id = ${id};
+        `;
+      });
       return (result.rowCount ?? 0) > 0;
     } catch (error) {
       console.error("Postgres error in deleteGreeting:", error);
