@@ -59,6 +59,7 @@ export async function initDatabase() {
     console.log("Postgres database table initialized successfully.");
   } catch (error) {
     console.error("Failed to initialize database table:", error);
+    throw error;
   }
 }
 
@@ -77,7 +78,8 @@ export async function getApprovedGreetings(): Promise<DbGreeting[]> {
       `;
       return rows;
     } catch (error) {
-      console.error("Postgres error, falling back to mock:", error);
+      console.error("Postgres error in getApprovedGreetings:", error);
+      throw error;
     }
   }
 
@@ -100,7 +102,8 @@ export async function getAllGreetings(): Promise<DbGreeting[]> {
       `;
       return rows;
     } catch (error) {
-      console.error("Postgres error, falling back to mock:", error);
+      console.error("Postgres error in getAllGreetings:", error);
+      throw error;
     }
   }
 
@@ -125,7 +128,8 @@ export async function addGreeting(name: string, message: string): Promise<DbGree
       `;
       return rows[0];
     } catch (error) {
-      console.error("Postgres error, falling back to mock:", error);
+      console.error("Postgres error in addGreeting:", error);
+      throw error;
     }
   }
 
@@ -146,15 +150,15 @@ export async function approveGreeting(id: number): Promise<boolean> {
   if (isDbConnected()) {
     try {
       const sql = getSql();
-      await sql`
+      const result = await sql`
         UPDATE greetings 
         SET approved = true 
         WHERE id = ${id};
       `;
-      return true;
+      return (result.rowCount ?? 0) > 0;
     } catch (error) {
-      console.error("Postgres error:", error);
-      return false;
+      console.error("Postgres error in approveGreeting:", error);
+      throw error;
     }
   }
 
@@ -172,14 +176,14 @@ export async function deleteGreeting(id: number): Promise<boolean> {
   if (isDbConnected()) {
     try {
       const sql = getSql();
-      await sql`
+      const result = await sql`
         DELETE FROM greetings 
         WHERE id = ${id};
       `;
-      return true;
+      return (result.rowCount ?? 0) > 0;
     } catch (error) {
-      console.error("Postgres error:", error);
-      return false;
+      console.error("Postgres error in deleteGreeting:", error);
+      throw error;
     }
   }
 

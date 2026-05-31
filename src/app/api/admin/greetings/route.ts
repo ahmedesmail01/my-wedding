@@ -15,10 +15,10 @@ export async function GET() {
   try {
     const allGreetings = await getAllGreetings();
     return NextResponse.json(allGreetings);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Admin GET greetings error:", error);
     return NextResponse.json(
-      { error: "Failed to load moderation list" },
+      { error: `Failed to load moderation list: ${error?.message || String(error)}` },
       { status: 500 }
     );
   }

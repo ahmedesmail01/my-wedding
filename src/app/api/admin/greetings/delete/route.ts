@@ -29,10 +29,10 @@ export async function POST(request: Request) {
       { error: "Failed to delete greeting. ID not found." },
       { status: 404 }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error("Admin delete greeting error:", error);
     return NextResponse.json(
-      { error: "Internal server error" },
+      { error: `Internal server error: ${error?.message || String(error)}` },
       { status: 500 }
     );
   }

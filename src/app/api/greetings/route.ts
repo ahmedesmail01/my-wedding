@@ -6,10 +6,10 @@ export async function GET() {
   try {
     const greetings = await getApprovedGreetings();
     return NextResponse.json(greetings);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Public GET greetings error:", error);
     return NextResponse.json(
-      { error: "Failed to fetch greetings" },
+      { error: `Failed to fetch greetings: ${error?.message || String(error)}` },
       { status: 500 }
     );
   }
@@ -37,10 +37,10 @@ export async function POST(request: Request) {
 
     const newGreeting = await addGreeting(name, message);
     return NextResponse.json(newGreeting, { status: 201 });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Public POST greetings error:", error);
     return NextResponse.json(
-      { error: "Failed to submit greeting" },
+      { error: `Failed to submit greeting: ${error?.message || String(error)}` },
       { status: 500 }
     );
   }
