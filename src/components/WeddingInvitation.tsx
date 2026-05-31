@@ -91,7 +91,7 @@ export default function WeddingInvitation() {
       <div
         ref={scrollerRef}
         onScroll={handleScroll}
-        className="slides-scroller"
+        className="slides-scroller relative top-6"
       >
         <SlideCalligraphy />
         <SlideHosts />
