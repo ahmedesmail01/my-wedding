@@ -25,6 +25,8 @@ interface Butterfly {
   wingBeatSpeed: number;
   phase: number;
   opacity: number;
+  color: string;
+  strokeColor: string;
 }
 
 export default function ButterflyParticles() {
@@ -60,6 +62,14 @@ export default function ButterflyParticles() {
     const maxSparkles = 25;
     const maxButterflies = 8;
 
+    // Premium warm gold, rose gold, amber and champagne wing color palettes
+    const wingColors = [
+      { fill: '212, 175, 55', stroke: '244, 215, 120' }, // Classic Gold
+      { fill: '230, 185, 95', stroke: '255, 220, 150' }, // Soft Amber
+      { fill: '225, 155, 140', stroke: '250, 195, 185' }, // Rose Gold
+      { fill: '242, 220, 180', stroke: '255, 240, 210' }  // Soft Champagne
+    ];
+
     if (showSparkles) {
       for (let i = 0; i < maxSparkles; i++) {
         sparkles.push({
@@ -76,6 +86,7 @@ export default function ButterflyParticles() {
 
     if (showButterflies) {
       for (let i = 0; i < maxButterflies; i++) {
+        const randColor = wingColors[Math.floor(Math.random() * wingColors.length)];
         butterflies.push({
           x: Math.random() * width,
           y: Math.random() * height + 100, // spawn slightly low
@@ -88,6 +99,8 @@ export default function ButterflyParticles() {
           wingBeatSpeed: Math.random() * 0.15 + 0.1,
           phase: Math.random() * Math.PI * 2,
           opacity: Math.random() * 0.3 + 0.25, // semi-transparent glow
+          color: randColor.fill,
+          strokeColor: randColor.stroke
         });
       }
     }
@@ -104,8 +117,8 @@ export default function ButterflyParticles() {
       const flapScale = Math.sin(b.phase);
       
       // We draw the left and right wings with scale inversion
-      ctx.fillStyle = `rgba(255, 255, 255, ${b.opacity})`;
-      ctx.strokeStyle = `rgba(255, 255, 255, ${b.opacity + 0.25})`;
+      ctx.fillStyle = `rgba(${b.color}, ${b.opacity})`;
+      ctx.strokeStyle = `rgba(${b.strokeColor}, ${b.opacity + 0.25})`;
       ctx.lineWidth = 1;
 
       // Draw LEFT Wing (flapping dynamically)
