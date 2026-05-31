@@ -71,9 +71,9 @@ export interface WeddingConfig {
 
 export const weddingConfig: WeddingConfig = {
   seo: {
-    title: "دعوة زفاف أحمد & سما | Wedding Invitation",
-    description: "نتشرف بدعوتكم لحضور حفل زفافنا. حضوركم يسعدنا ويتم به سرورنا.",
-    keywords: "wedding invitation, أحمد وسما, دعوة زفاف, الساحل الشمالي, wedding invite",
+    title: "دعوة خطوبة أحمد & سما | Wedding Invitation",
+    description: "نتشرف بدعوتكم لحضور حفل خطوبةنا. حضوركم يسعدنا ويتم به سرورنا.",
+    keywords: "wedding invitation, أحمد وسما, دعوة خطوبة, الساحل الشمالي, wedding invite",
     ogImage: "/og-image.jpg"
   },
   theme: {
