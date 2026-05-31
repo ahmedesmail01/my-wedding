@@ -58,7 +58,7 @@ export default function WeddingInvitation() {
   if (!mounted) return null;
 
   return (
-    <div className="mobile-wrapper h-[60vh] select-none">
+    <div className="mobile-wrapper select-none">
       {/* Floating Canvas Particles */}
       <ButterflyParticles />
 
