@@ -16,13 +16,13 @@ export default function SlideHosts() {
             <p className="text-sm text-gray-400 font-light" style={{ fontFamily: 'var(--font-cairo)' }}>
               بكل حب ومودة، يتشرف كل من
             </p>
-            
+
             <h3 className="text-2xl font-bold text-[var(--primary-color)] mt-3">
               {weddingConfig.hosts.groomParentsAr}
             </h3>
-            
+
             <span className="text-xs text-gray-400 my-1 font-light">&</span>
-            
+
             <h3 className="text-2xl font-bold text-[var(--primary-color)]">
               {weddingConfig.hosts.brideParentsAr}
             </h3>
@@ -32,9 +32,9 @@ export default function SlideHosts() {
 
           <div className="rtl-content flex flex-col gap-2">
             <p className="text-sm text-gray-500 max-w-xs font-light leading-relaxed" style={{ fontFamily: 'var(--font-cairo)' }}>
-              بدعوتكم لحضور حفل زفاف ولديهما الغاليين
+              بدعوتكم لحضور حفل زفاف
             </p>
-            
+
             <div className="text-3xl font-extrabold text-[var(--primary-color)] mt-2 font-arabic flex items-center justify-center gap-4">
               <span className="gold-gradient-text">{weddingConfig.couple.groomNameAr}</span>
               <span className="text-sm font-light text-gray-400">&</span>

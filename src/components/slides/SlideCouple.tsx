@@ -38,7 +38,7 @@ export default function SlideCouple() {
           </div>
 
           <div className="rtl-content mt-3 text-xs text-gray-400 font-light max-w-xs leading-relaxed" style={{ fontFamily: 'var(--font-cairo)' }}>
-            حضوركم يكتمل به بهاؤنا وتكتسي قلوبنا فرحاً وسروراً
+            {weddingConfig.event.welcomeTextAr}
           </div>
         </div>
 
