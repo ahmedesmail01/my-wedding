@@ -9,7 +9,7 @@ export interface DbGreeting {
   created_at: string;
 }
 
-// In-memory mock database fallback for local dev when POSTGRES_URL is not set
+// In-memory mock database fallback for local dev when samaya_POSTGRES_URL is not set
 let mockGreetings: DbGreeting[] = weddingConfig.guestbook.initialGreetings.map((g, idx) => ({
   id: idx + 1,
   name: g.name,
@@ -20,7 +20,7 @@ let mockGreetings: DbGreeting[] = weddingConfig.guestbook.initialGreetings.map((
 
 // Helper to determine if we have a live Vercel Postgres connection
 const isDbConnected = (): boolean => {
-  return typeof process.env.POSTGRES_URL === 'string' && process.env.POSTGRES_URL.length > 0;
+  return typeof process.env.samaya_POSTGRES_URL === 'string' && process.env.samaya_POSTGRES_URL.length > 0;
 };
 
 // Initialize table if using live Postgres
@@ -62,7 +62,7 @@ export async function getApprovedGreetings(): Promise<DbGreeting[]> {
   }
 
   // Fallback to approved mock greetings
-  return mockGreetings.filter(g => g.approved).sort((a, b) => 
+  return mockGreetings.filter(g => g.approved).sort((a, b) =>
     new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
 }
@@ -83,7 +83,7 @@ export async function getAllGreetings(): Promise<DbGreeting[]> {
     }
   }
 
-  return [...mockGreetings].sort((a, b) => 
+  return [...mockGreetings].sort((a, b) =>
     new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
   );
 }

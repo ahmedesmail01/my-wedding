@@ -86,10 +86,9 @@ export const weddingConfig: WeddingConfig = {
     particles: "both"
   },
   audio: {
-    // Royalty-free soft cinematic wedding piano music track URL
-    url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3", // fallback beautiful instrumental
-    title: "Romantic Wedding Piano",
-    artist: "Cinematic Instrumental"
+    url: "/sounds/WhatsApp%20Audio%202026-06-01%20at%201.34.12%20AM.mpeg",
+    title: "زفة أحمد & سما",
+    artist: "Wedding Soundtrack"
   },
   monogram: {
     lettersAr: "أ ٫ س",
