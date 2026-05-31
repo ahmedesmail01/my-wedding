@@ -1,6 +1,12 @@
 import { sql } from '@vercel/postgres';
 import { weddingConfig } from '@/config/wedding';
 
+// Synchronize custom Vercel environment variables to standard POSTGRES_URL driver expectations
+const customPgUrl = process.env.sanaya_POSTGRES_URL || process.env.samaya_POSTGRES_URL;
+if (!process.env.POSTGRES_URL && customPgUrl) {
+  process.env.POSTGRES_URL = customPgUrl;
+}
+
 export interface DbGreeting {
   id: number;
   name: string;
@@ -9,7 +15,7 @@ export interface DbGreeting {
   created_at: string;
 }
 
-// In-memory mock database fallback for local dev when samaya_POSTGRES_URL is not set
+// In-memory mock database fallback for local dev when POSTGRES_URL is not set
 let mockGreetings: DbGreeting[] = weddingConfig.guestbook.initialGreetings.map((g, idx) => ({
   id: idx + 1,
   name: g.name,
@@ -20,7 +26,7 @@ let mockGreetings: DbGreeting[] = weddingConfig.guestbook.initialGreetings.map((
 
 // Helper to determine if we have a live Vercel Postgres connection
 const isDbConnected = (): boolean => {
-  return typeof process.env.samaya_POSTGRES_URL === 'string' && process.env.samaya_POSTGRES_URL.length > 0;
+  return typeof process.env.POSTGRES_URL === 'string' && process.env.POSTGRES_URL.length > 0;
 };
 
 // Initialize table if using live Postgres
