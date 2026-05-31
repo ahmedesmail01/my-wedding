@@ -24,7 +24,12 @@ const isDbConnected = (): boolean => {
     process.env.POSTGRES_URL || 
     process.env.sanaya_POSTGRES_URL || 
     process.env.samaya_POSTGRES_URL;
-  return typeof connectionString === 'string' && connectionString.length > 0;
+  return (
+    typeof connectionString === 'string' && 
+    connectionString.trim().length > 0 &&
+    (connectionString.startsWith('postgres://') || connectionString.startsWith('postgresql://')) &&
+    !connectionString.includes('db.prisma.io') // Prisma Accelerate is not compatible with direct node-postgres drivers
+  );
 };
 
 // Lazy pool helper to prevent ESM import hoisting timezone/connection string lag
