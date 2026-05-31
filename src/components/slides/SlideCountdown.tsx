@@ -13,9 +13,34 @@ export default function SlideCountdown() {
   });
 
   useEffect(() => {
+    const parseDateSafe = (isoStr: string): number => {
+      const t = new Date(isoStr).getTime();
+      if (!isNaN(t)) return t;
+
+      // Robust custom parser fallback for older Safari/iOS platforms
+      const match = isoStr.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:Z|([+-])(\d{2}):(\d{2}))?$/);
+      if (!match) return Date.now();
+
+      const [, y, m, d, hr, min, sec, sign, tzH, tzM] = match;
+      const utcTimestamp = Date.UTC(
+        parseInt(y, 10),
+        parseInt(m, 10) - 1,
+        parseInt(d, 10),
+        parseInt(hr, 10),
+        parseInt(min, 10),
+        parseInt(sec, 10)
+      );
+
+      if (sign && tzH && tzM) {
+        const offsetMs = (parseInt(tzH, 10) * 60 + parseInt(tzM, 10)) * 60 * 1000;
+        return sign === '+' ? utcTimestamp - offsetMs : utcTimestamp + offsetMs;
+      }
+      return utcTimestamp;
+    };
+
     const calculateTime = () => {
-      const targetDate = new Date(weddingConfig.event.dateTimeIso).getTime();
-      const now = new Date().getTime();
+      const targetDate = parseDateSafe(weddingConfig.event.dateTimeIso);
+      const now = Date.now();
       const difference = targetDate - now;
 
       if (difference <= 0) {

@@ -7,7 +7,7 @@ export default function SlideGuestbook() {
   const [greetings, setGreetings] = useState<DbGreeting[]>([]);
   const [gbName, setGbName] = useState('');
   const [gbMessage, setGbMessage] = useState('');
-  
+
   // Loading & submission status
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,7 +53,7 @@ export default function SlideGuestbook() {
         setGbName('');
         setGbMessage('');
         setSubmitSuccess(true);
-        
+
         // Hide temporary toast banner after 6s
         setTimeout(() => {
           setSubmitSuccess(false);
@@ -104,8 +104,8 @@ export default function SlideGuestbook() {
               <p className="rtl-content text-xs text-gray-400 font-light py-4">لا توجد تهاني معتمدة بعد. كن أول من يهنئ!</p>
             ) : (
               greetings.map((g) => (
-                <div 
-                  key={g.id} 
+                <div
+                  key={g.id}
                   className="glass-panel p-2.5 rounded-xl border border-[rgba(255,255,255,0.6)] shadow-xs animate-fade-in-scale text-right"
                 >
                   <div className="flex justify-between items-center mb-1">
@@ -125,7 +125,7 @@ export default function SlideGuestbook() {
           {/* Submit Success Toast overlay */}
           {submitSuccess && (
             <div className="p-3.5 rounded-xl bg-green-950/40 text-green-200 border border-green-800 text-xs rtl-content leading-relaxed animate-fade-in-scale text-center max-w-[280px]">
-              ✨ تم إرسال تهنئتك بنجاح! وهي قيد المراجعة والاعتماد حالياً من قبل أصحاب الحفل لتظهر للجميع قريباً.
+              ✨ تم إرسال تهنئتك بنجاح! .
             </div>
           )}
 

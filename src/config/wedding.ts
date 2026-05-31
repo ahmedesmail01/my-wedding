@@ -114,8 +114,8 @@ export const weddingConfig: WeddingConfig = {
     brideNameEn: "Sama"
   },
   event: {
-    // Current local time in system is Jun 1, 2026. Let's schedule it for Aug 29, 2026.
-    dateTimeIso: "2026-08-29T20:00:00",
+    // Synchronized to June 2nd, 2026 at 9:00 PM (GMT+3 Cairo DST time)
+    dateTimeIso: "2026-06-02T21:00:00+03:00",
     dateTextAr: "الثلاثاء | 2 يونيو 2026 | التاسعة مساءً",
     dateTextEn: "Tuesday, June 2, 2026 at 9:00 PM",
     venueNameAr: "قاعة ريماس",
@@ -124,7 +124,7 @@ export const weddingConfig: WeddingConfig = {
     venueAddressEn: "El Santa - Gharbia",
     googleMapsUrl: "https://maps.app.goo.gl/uq7vjgVQjb1mvpRa7",
     calendarTitle: "Wedding Ceremony of Ahmed & Sama",
-    calendarDescription: "We are thrilled to celebrate our special day with you! Venue: Venus Resort 1, North Coast, Egypt.",
+    calendarDescription: "We are thrilled to celebrate our special day with you! Venue: Rimas Hall, El Santa, Gharbia, Egypt.",
     welcomeTextAr: "وبحضوركم يتم لنا الفرح والسرور"
   },
   rsvp: {
