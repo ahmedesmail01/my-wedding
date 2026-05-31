@@ -32,7 +32,7 @@ export default function SlideHosts() {
 
           <div className="rtl-content flex flex-col gap-2">
             <p className="text-sm text-gray-500 max-w-xs font-light leading-relaxed" style={{ fontFamily: 'var(--font-cairo)' }}>
-              بدعوتكم لحضور حفل زفاف
+              بدعوتكم لحضور حفل خطوبة
             </p>
 
             <div className="text-3xl font-extrabold text-[var(--primary-color)] mt-2 font-arabic flex items-center justify-center gap-4">

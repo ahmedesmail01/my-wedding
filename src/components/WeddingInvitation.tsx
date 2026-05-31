@@ -58,7 +58,7 @@ export default function WeddingInvitation() {
   if (!mounted) return null;
 
   return (
-    <div className="mobile-wrapper select-none">
+    <div className="mobile-wrapper h-[60vh] select-none">
       {/* Floating Canvas Particles */}
       <ButterflyParticles />
 
@@ -91,7 +91,7 @@ export default function WeddingInvitation() {
       <div
         ref={scrollerRef}
         onScroll={handleScroll}
-        className="slides-scroller relative top-2"
+        className="slides-scroller "
       >
         <SlideCalligraphy />
         <SlideHosts />
