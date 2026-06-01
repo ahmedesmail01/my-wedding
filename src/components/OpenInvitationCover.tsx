@@ -73,7 +73,7 @@ export default function OpenInvitationCover({ onOpen }: OpenInvitationCoverProps
             className="text-[var(--accent-color)] text-sm tracking-[0.3em] font-medium uppercase"
             style={{ fontFamily: "var(--font-serif)" }}
           >
-            Wedding Invitation
+            Engagement Invitation
           </span>
 
           <h1
