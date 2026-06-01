@@ -5,8 +5,8 @@ export async function POST(request: Request) {
   try {
     const { username, password } = await request.json();
 
-    const envUsername = process.env.ADMIN_USERNAME || 'ahmed';
-    const envPassword = process.env.ADMIN_PASSWORD || 'samaya9807';
+    const envUsername = process.env.ADMIN_USERNAME;
+    const envPassword = process.env.ADMIN_PASSWORD;
 
     // Strict validation
     if (username === envUsername && password === envPassword) {
