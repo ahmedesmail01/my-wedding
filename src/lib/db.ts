@@ -15,7 +15,7 @@ let mockGreetings: DbGreeting[] = weddingConfig.guestbook.initialGreetings.map((
   name: g.name,
   message: g.message,
   approved: true, // Initial mock greetings are public/approved
-  created_at: new Date(g.date).toISOString()
+  created_at: new Date(g.created_at).toISOString()
 }));
 
 // Helper to determine if we have a live Postgres connection string
