@@ -42,7 +42,7 @@ body {
 html, body {
   background-color: #1a1a1a; /* Background dark shade behind the mobile mockup on desktop */
   color: var(--text-primary);
-  overflow-x: hidden;
+  overflow: hidden;
   height: 100%;
   width: 100%;
 }
@@ -93,7 +93,7 @@ html, body {
   }
   .mobile-wrapper {
     height: 92dvh;
-    min-height: 800px;
+    min-height: min(800px, 90dvh);
     border-radius: 40px;
     border: 12px solid #222; /* Sleek bezel */
     box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);

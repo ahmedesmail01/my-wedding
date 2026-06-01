@@ -8,7 +8,7 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <main className="min-h-screen w-full flex items-center justify-center bg-zinc-950 font-sans relative overflow-hidden">
+    <main className="h-screen w-full flex items-center justify-center bg-zinc-950 font-sans relative overflow-hidden">
       {!isOpen ? (
         /* Autoplay-safe opening entrance cover gate */
         <OpenInvitationCover onOpen={() => setIsOpen(true)} />
