@@ -62,9 +62,12 @@ export interface WeddingConfig {
   guestbook: {
     enabled: boolean;
     initialGreetings: Array<{
+      id: number | any;
       name: string;
       message: string;
-      date: string;
+      approved: boolean | any;
+      created_at: string | any;
+      // date: string;
     }>;
   };
 }
@@ -133,21 +136,48 @@ export const weddingConfig: WeddingConfig = {
   guestbook: {
     enabled: true,
     initialGreetings: [
-      // {
-      //   name: "خالد المحمدي",
-      //   message: "ألف مبروك لأجمل عريسين! تمنياتي لكم بحياة زوجية سعيدة مليئة بالحب والرفاه والبنين.",
-      //   date: "2026-05-30"
-      // },
-      // {
-      //   name: "Dr. Sarah Johnson",
-      //   message: "So happy for you both! Can't wait to celebrate this beautiful day. Wishing you all the love and happiness in the world!",
-      //   date: "2026-05-31"
-      // },
-      // {
-      //   name: "عائلة أبو العلا",
-      //   message: "بارك الله لكما وبارك عليكما وجمع بينكما في خير. نراكم على خير قريباً بالساحل الشمالي إن شاء الله.",
-      //   date: "2026-06-01"
-      // }
+      {
+        "id": 1,
+        "name": "مامت العروسة",
+        "message": "الف مبروك ياحبيبتي ربنا يتمم عليكم بخير يارب",
+        "approved": false,
+        "created_at": "2026-06-01T00:00:00.000Z"
+      },
+      {
+        "id": 2,
+        "name": "حبيبه",
+        "message": "مليون مبروك يعشرة عمرى ❤️",
+        "approved": false,
+        "created_at": "2026-06-01T00:00:00.000Z"
+      },
+      {
+        "id": 3,
+        "name": "ايمان",
+        "message": "الف مبروك ياقلبي ربنا يسعدك ياروحي وتكمل فرحتك ع خير❤️❤️",
+        "approved": false,
+        "created_at": "2026-06-01T00:00:00.000Z"
+      },
+      {
+        "id": 4,
+        "name": "سلمي",
+        "message": "ربنا يسعدكم ويهفرحكم ببعض يارب والف مبروك لي حبيبه قلبي صغنن البيت واخر العنقود",
+        "approved": false,
+        "created_at": "2026-06-01T00:00:00.000Z"
+      },
+      {
+        "id": 5,
+        "name": "أحمد الكفراوى",
+        "message": "الف الف مبروووووك يا حبيب اخوك ربنا يتمملك علي خير يا رب العالمين و",
+        "approved": false,
+        "created_at": "2026-06-01T00:00:00.000Z"
+      },
+      {
+        "id": 6,
+        "name": "Fawzy Mohamed",
+        "message": "\"بأجمل المشاعر وأرق الكلمات، أتقدم بأحر التهاني والتبريكات بمناسبة خطوبتكم المباركة، متمنياً لكم حياة مليئة بالفرح والتوفيق والخير الدائم.\"",
+        "approved": false,
+        "created_at": "2026-06-01T00:00:00.000Z"
+      }
     ]
   }
 };
